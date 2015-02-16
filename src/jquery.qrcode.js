@@ -40,12 +40,7 @@
             }
         };
 
-        var createCanvas = function(){
-            // create the qrcode itself
-            var qrcode = new QRCode(options.typeNumber, normalizeErrorCorrectLevel(options.correctLevel));
-            qrcode.addData(options.text);
-            qrcode.make();
-
+        var createCanvas = function(qrcode){
             // create canvas element
             var canvas = document.createElement('canvas');
             canvas.width = options.width;
@@ -70,12 +65,7 @@
         };
 
         // from Jon-Carlos Rivera (https://github.com/imbcmdth)
-        var createTable = function(){
-            // create the qrcode itself
-            var qrcode = new QRCode(options.typeNumber, normalizeErrorCorrectLevel(options.correctLevel));
-            qrcode.addData(options.text);
-            qrcode.make();
-
+        var createTable = function(qrcode){
             // create table element
             var $table = $('<table></table>')
                 .css("width", options.width+"px")
@@ -109,12 +99,7 @@
             return $table;
         };
 
-        var createDivs = function(){
-            // create the qrcode itself
-            var qrcode = new QRCode(options.typeNumber, normalizeErrorCorrectLevel(options.correctLevel));
-            qrcode.addData(options.text);
-            qrcode.make();
-
+        var createDivs = function(qrcode){
             // create container div element
             var $container    = $('<div></div>')
                 .css("display", "block")
@@ -163,15 +148,20 @@
         }
 
         return this.each(function(){
+            // create the qrcode itself
+            var qrcode = new QRCode(options.typeNumber, normalizeErrorCorrectLevel(options.correctLevel));
+            qrcode.addData(options.text);
+            qrcode.make();
+
             switch(options.render) {
                 case "canvas":
-                    var element = createCanvas();
+                    var element = createCanvas(qrcode);
                     break;
                 case "divs":
-                    var element = createDivs();
+                    var element = createDivs(qrcode);
                     break;
                 default:
-                    var element = createTable();
+                    var element = createTable(qrcode);
                     break;
             }
             $(element).appendTo(this);
