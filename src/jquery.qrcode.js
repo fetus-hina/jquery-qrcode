@@ -111,7 +111,7 @@
 
         var createDivs = function(){
             // create the qrcode itself
-            var qrcode = new QRCode(options.typeNumber, options.correctLevel);
+            var qrcode = new QRCode(options.typeNumber, normalizeErrorCorrectLevel(options.correctLevel));
             qrcode.addData(options.text);
             qrcode.make();
 
