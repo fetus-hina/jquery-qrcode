@@ -1,3 +1,4 @@
+/** @preserve Copyright (c) 2011 Jerome Etienne, http://jetienne.com */
 (function( $ ){
     $.fn.qrcode = function(options) {
         // if options is string, 
