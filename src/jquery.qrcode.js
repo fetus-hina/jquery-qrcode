@@ -122,31 +122,41 @@
                 .css("width", options.width+"px")
                 .css("height", options.height+"px")
                 .css("border", "0px")
-                .css('background-color', options.background);
+                .css('background-color', options.background)
+                .css('position', 'relative');
 
             // compute tileS percentage
             var modCount = qrcode.getModuleCount();
             var tileW    = options.width / modCount;
             var tileH    = options.height / modCount;
+            var w = [];
+            for(var col = 0; col < modCount; col++ ){
+                w.push(Math.round(tileW * (col + 1)) - Math.round(tileW * col));
+            }
 
             // draw within the container div
             var first = true;
+            var topOffset = 0;
             for(var row = 0; row < modCount; row++ ){
                 var firstCol = true;
+                var h = Math.round(tileH * (row + 1)) - Math.round(tileH * row);
+                var leftOffset = 0;
                 for(var col = 0; col < modCount; col++ ){
                     var $el = $('<div></div>')
                         .css("display", "block")
                         .css("float", "none")
-                        .css('position', 'relative')
-                        .css('height', tileH+"px")
-                        .css('width', tileW+"px")
-                        .css('top', -1*row*options.height+"px")
-                        .css('left', row*tileW+"px")
+                        .css('position', 'absolute')
+                        .css('height', h+"px")
+                        .css('width', w[col]+"px")
+                        .css('top', topOffset+"px")
+                        .css('left', leftOffset+"px")
                         .css('background-color', qrcode.isDark(row, col) ? options.foreground : options.background)
                         .appendTo($container);
                     first = false;
                     firstCol = false;
+                    leftOffset += w[col];
                 }
+                topOffset += h;
             }
             // return just built div
             return $container
