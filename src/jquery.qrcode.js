@@ -108,11 +108,63 @@
 			// return just built canvas
 			return $table;
 		}
-  
 
-		return this.each(function(){
-			var element	= options.render == "canvas" ? createCanvas() : createTable();
-			$(element).appendTo(this);
-		});
+        var createDivs    = function(){
+            // create the qrcode itself
+            var qrcode    = new QRCode(options.typeNumber, options.correctLevel);
+            qrcode.addData(options.text);
+            qrcode.make();
+
+            // create container div element
+            var $container    = $('<div></div>')
+                .css("display", "block")
+                .css("float", "none")
+                .css("width", options.width+"px")
+                .css("height", options.height+"px")
+                .css("border", "0px")
+                .css('background-color', options.background);
+
+            // compute tileS percentage
+            var modCount = qrcode.getModuleCount();
+            var tileW    = options.width / modCount;
+            var tileH    = options.height / modCount;
+
+            // draw within the container div
+            var first = true;
+            for(var row = 0; row < modCount; row++ ){
+                var firstCol = true;
+                for(var col = 0; col < modCount; col++ ){
+                    var $el = $('<div></div>')
+                        .css("display", "block")
+                        .css("float", "none")
+                        .css('position', 'relative')
+                        .css('height', tileH+"px")
+                        .css('width', tileW+"px")
+                        .css('top', -1*row*options.height+"px")
+                        .css('left', row*tileW+"px")
+                        .css('background-color', qrcode.isDark(row, col) ? options.foreground : options.background)
+                        .appendTo($container);
+                    first = false;
+                    firstCol = false;
+                }
+            }
+            // return just built div
+            return $container
+        }
+
+        return this.each(function(){
+            switch(options.render) {
+                case "canvas":
+                    var element = createCanvas();
+                    break;
+                case "divs":
+                    var element = createDivs();
+                    break;
+                default:
+                    var element = createTable();
+                break;
+            }
+            $(element).appendTo(this);
+        });
 	};
 })( jQuery );
