@@ -13,33 +13,10 @@
             width           : 256,
             height          : 256,
             typeNumber      : -1,
-            correctLevel    : QRErrorCorrectLevel.H,
+            correctLevel    : "H",
             background      : "#ffffff",
             foreground      : "#000000"
         }, options);
-
-        var normalizeErrorCorrectLevel = function(correctLevel) {
-            switch((correctLevel + "").toUpperCase()) {
-                case "L":
-                case QRErrorCorrectLevel.L + "":
-                    return QRErrorCorrectLevel.L;
-
-                case "M":
-                case QRErrorCorrectLevel.M + "":
-                    return QRErrorCorrectLevel.M;
-
-                case "Q":
-                case QRErrorCorrectLevel.Q + "":
-                    return QRErrorCorrectLevel.Q;
-
-                case "H":
-                case QRErrorCorrectLevel.H + "":
-                    return QRErrorCorrectLevel.H;
-
-                default:
-                    throw new Error("Invalid correct level " + correctLevel);
-            }
-        };
 
         var createCanvas = function(qrcode){
             // create canvas element
@@ -150,7 +127,7 @@
 
         return this.each(function(){
             // create the qrcode itself
-            var qrcode = new QRCode(options.typeNumber, normalizeErrorCorrectLevel(options.correctLevel));
+            var qrcode = new QRCode(options.typeNumber, QRErrorCorrectLevel[options.correctLevel.toUpperCase()]);
             qrcode.addData(options.text);
             qrcode.make();
 
